@@ -1,22 +1,34 @@
-import React from 'react';
+import React, {Component, Fragment} from 'react';
 import axios from 'axios'
 import './App.css';
 import Select from 'react-select';
+import BikeMap from './components/BikeMap'
+import styled from 'styled-components'
 
-export default class App extends React.Component{
+export const Grid = styled.div`
+`;
+export const Row = styled.div`
+display:flex;
+`;
+export const Col = styled.div`
+flex: ${(props) => props.size};
+`;
+export default class App extends Component {
     state = {
         data: [],
         chosen: {
             name: "",
             freeBikes: "",
             freeSlots: "",
+            lat: "60.170716",
+            long: "24.941412"
         },
     };
 
     options = [];
 
     render() {
-        const mystyle ={
+        const mystyle = {
             color: "black",
             backgroundColor: "DodgerBlue",
             padding: "10px",
@@ -24,26 +36,39 @@ export default class App extends React.Component{
         };
         return (
             <div className="App" style={mystyle}>
-                    <Select
-                        placeholder="Select bike station"
-                        options={this.options}
-                        onChange={this.showData}
-                    />
-                <div className="data" >
-                            <p><b>Selected station: </b> {this.state.chosen.name}</p>
-
-                    <p><b>Free bikes: </b> {this.state.chosen.freeBikes}</p>
-
-                    <p><b>Empty slots: </b> {this.state.chosen.freeSlots}</p>
-                    </div>
-                </div>
-
+                <Grid>
+                    <Row>
+                        <Col size={1}>
+                            <Select
+                                placeholder="Select bike station"
+                                options={this.options}
+                                onChange={this.showData}
+                            />
+                            <div className="data">
+                                <p><b>Selected station: </b> {this.state.chosen.name}</p>
+                                <p><b>Free bikes: </b> {this.state.chosen.freeBikes}</p>
+                                <p><b>Empty slots: </b> {this.state.chosen.freeSlots}</p>
+                            </div>
+                        </Col>
+                        <Col size={2}>
+                            <BikeMap
+                                name={this.state.chosen.name}
+                                long={this.state.chosen.long}
+                                lat={this.state.chosen.lat}
+                                free_bikes={this.state.chosen.freeBikes}
+                                empty_slots={this.state.chosen.freeSlots}
+                            />
+                        </Col>
+                    </Row>
+                </Grid>
+            </div>
         );
 
     };
-    componentDidMount(){
+
+    componentDidMount() {
         axios.get('http://api.citybik.es/v2/networks/citybikes-helsinki')
-            .then(res =>{
+            .then(res => {
                 const names = res.data.network.stations;
                 console.log(names);
                 Array.from(names).forEach(element => {
@@ -54,16 +79,20 @@ export default class App extends React.Component{
             })
     };
 
-    showData= (e)  => {
+    showData = (e) => {
         this.state.data.forEach(element => {
-            if (element.name ==e.value){
-                this.setState({chosen: {
-                    name: element.name,
-                    freeBikes: element.free_bikes,
-                    freeSlots: element.empty_slots,
+            if (element.name == e.value) {
+                this.setState({
+                        chosen: {
+                            name: element.name,
+                            freeBikes: element.free_bikes,
+                            freeSlots: element.empty_slots,
+                            lat: element.latitude,
+                            long: element.longitude,
+                        }
                     }
-                }
-            )}
+                )
+            }
         });
     };
 }

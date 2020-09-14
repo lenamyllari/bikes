@@ -1,8 +1,9 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 import axios from 'axios'
 import './App.css';
 import Select from 'react-select';
 import BikeMap from './components/BikeMap'
+import Weather from './components/Weather'
 import styled from 'styled-components'
 
 export const Grid = styled.div`
@@ -31,14 +32,15 @@ export default class App extends Component {
         const mystyle = {
             color: "black",
             backgroundColor: "DodgerBlue",
-            padding: "10px",
-            fontFamily: "Arial"
+            padding: "20px",
+            fontFamily: "Arial",
+
         };
         return (
             <div className="App" style={mystyle}>
                 <Grid>
                     <Row>
-                        <Col size={1}>
+                        <Col size={1} style={mystyle}>
                             <Select
                                 placeholder="Select bike station"
                                 options={this.options}
@@ -49,6 +51,7 @@ export default class App extends Component {
                                 <p><b>Free bikes: </b> {this.state.chosen.freeBikes}</p>
                                 <p><b>Empty slots: </b> {this.state.chosen.freeSlots}</p>
                             </div>
+                            <Weather ></Weather>
                         </Col>
                         <Col size={2}>
                             <BikeMap
@@ -70,12 +73,10 @@ export default class App extends Component {
         axios.get('http://api.citybik.es/v2/networks/citybikes-helsinki')
             .then(res => {
                 const names = res.data.network.stations;
-                console.log(names);
                 Array.from(names).forEach(element => {
                     this.options.push({"value": element.name, "label": element.name});
                 });
                 this.setState({data: names});
-                console.log(this.state.data)
             })
     };
 

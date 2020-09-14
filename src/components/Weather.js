@@ -15,7 +15,7 @@ export default class Weather extends React.Component {
     };
 
     componentDidMount() {
-        axios.get('http://api.openweathermap.org/data/2.5/weather?q=Helsinki&units=metric&appid=9d50eff8a8837c3f8e83001b3f61cab8')
+        axios.get('http://api.openweathermap.org/data/2.5/weather?q=Helsinki&units=metric&appid=')
             .then(res => {
                 const weather = res.data;
                 var tmp = weather.main.temp + "°C";

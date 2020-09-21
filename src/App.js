@@ -24,9 +24,12 @@ export default class App extends Component {
             lat: "60.170716",
             long: "24.941412"
         },
+        destination: ""
     };
 
     options = [];
+
+
 
     render() {
         const mystyle = {
@@ -51,6 +54,13 @@ export default class App extends Component {
                                 <p><b>Free bikes: </b> {this.state.chosen.freeBikes}</p>
                                 <p><b>Empty slots: </b> {this.state.chosen.freeSlots}</p>
                             </div>
+                            <form onSubmit={this.getDestination}>
+                            <label>
+                                <input value={this.state.destination} onChange={this.handleDestinationChange}/>
+                            </label>
+                            <button type="submit">Get route</button>
+                            </form>
+                            <div id="route"></div>
                             <Weather ></Weather>
                         </Col>
                         <Col size={2}>
@@ -83,6 +93,7 @@ export default class App extends Component {
     showData = (e) => {
         this.state.data.forEach(element => {
             if (element.name == e.value) {
+
                 this.setState({
                         chosen: {
                             name: element.name,
@@ -96,6 +107,15 @@ export default class App extends Component {
             }
         });
     };
+
+    getDestination =(e) => {
+        e.preventDefault();
+        console.log(this.state.destination)
+    }
+
+    handleDestinationChange =(e) =>{
+        this.setState({destination: e.target.value})
+    }
 }
 
 

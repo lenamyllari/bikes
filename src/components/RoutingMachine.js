@@ -8,7 +8,8 @@ class Routing extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            map: this.props.map
+            map: this.props.map,
+            leafletElement: null
         }
     }
 
@@ -24,27 +25,27 @@ class Routing extends React.Component {
 
     setEndpoint=()=>{
         console.log(this.props)
-        this.leafletElement.spliceWaypoints(1,1, L.latLng(this.props.destination));
-        console.log("getWaypoints ",this.leafletElement.getWaypoints())
-        console.log("getPlan ", this.leafletElement.getPlan())
-        return this.leafletElement.getPlan()
+        this.state.leafletElement.spliceWaypoints(1,1, L.latLng(this.props.destination));
+        console.log("getWaypoints ",this.state.leafletElement.getWaypoints())
+        console.log("getPlan ", this.state.leafletElement.getPlan())
+        return this.state.leafletElement.getPlan()
     }
 
     setStartpoint=()=>{
         console.log(this.props)
-        this.leafletElement.spliceWaypoints(0,1, L.latLng(this.props.station))
-        console.log("getWaypoints ",this.leafletElement.getWaypoints())
-        console.log("getPlan ", this.leafletElement.getPlan())
-        return this.leafletElement.getPlan()
+        this.state.leafletElement.spliceWaypoints(0,1, L.latLng(this.props.position))
+        console.log("getWaypoints ",this.state.leafletElement.getWaypoints())
+        console.log("getPlan ", this.state.leafletElement.getPlan())
+        return this.state.leafletElement.getPlan()
     }
 
     createLeafletElement() {
         console.log("routing")
         const { map } = this.props;
-        let leafletElement = L.Routing.control({
+        this.state.leafletElement = L.Routing.control({
             waypoints: [L.latLng(this.props.position), L.latLng(this.props.destination)]
         }).addTo(map.leafletElement);
-        return leafletElement.getPlan();
+        return this.state.leafletElement.getPlan();
     }
 
     render() {
